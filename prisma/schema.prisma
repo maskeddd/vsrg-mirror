@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model maps {
+  id                     Int      @id @default(autoincrement())
+  mapset_id              Int?
+  md5                    String?
+  alternative_md5        String?
+  creator_id             Int?
+  creator_username       String?
+  game_mode              Int?
+  ranked_status          Int?
+  artist                 String?
+  title                  String?
+  source                 String?
+  tags                   String?
+  description            String?
+  difficulty_name        String?
+  length                 Int?
+  bpm                    Int?
+  difficulty_rating      Float?
+  count_hitobject_normal Int?
+  count_hitobject_long   Int?
+  play_count             Int?
+  fail_count             Int?
+  mods_pending           Int?
+  mods_accepted          Int?
+  mods_denied            Int?
+  mods_ignored           Int?
+  online_offset          Int?
+  clan_ranked            Int?
+  mapsets                mapsets? @relation(fields: [mapset_id], references: [id])
+}
+
+model mapsets {
+  id                         Int       @id @default(autoincrement())
+  creator_id                 Int?
+  creator_username           String?
+  creator_avatar_url         String?
+  artist                     String?
+  title                      String?
+  source                     String?
+  tags                       String?
+  description                String?
+  date_submitted             DateTime?
+  date_last_updated          DateTime?
+  ranking_queue_status       Int?
+  ranking_queue_last_updated DateTime?
+  ranking_queue_vote_count   Int?
+  mapset_ranking_queue_id    Int?
+  maps                       maps[]
+}
