@@ -3,11 +3,11 @@ import type Error from "../../../types/error";
 import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const mapsetWithMaps = Prisma.validator<Prisma.mapsetsArgs>()({
-  include: { maps: true },
+const mapsetWithMaps = Prisma.validator<Prisma.MapsetArgs>()({
+  include: { Map: true },
 });
 
-type MapsetWithMaps = Prisma.mapsetsGetPayload<typeof mapsetWithMaps>;
+type MapsetWithMaps = Prisma.MapsetGetPayload<typeof mapsetWithMaps>;
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,12 +18,12 @@ export default async function handler(
   if (!mapset_id)
     return res.status(400).json({ code: 400, message: "invalid ID provided" });
 
-  const mapset = await prisma.mapsets.findFirst({
+  const mapset = await prisma.mapset.findFirst({
     where: {
       id: mapset_id,
     },
     include: {
-      maps: true,
+      Map: true,
     },
   });
   if (!mapset) {
