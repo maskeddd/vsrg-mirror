@@ -20,6 +20,7 @@ export default async function handler(
       Map: true,
     },
   });
+
   if (!mapset) {
     res.status(404).json({ code: 404, message: "mapset not found" });
   } else {
