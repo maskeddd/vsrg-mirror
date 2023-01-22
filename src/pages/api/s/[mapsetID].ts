@@ -1,13 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type Error from "../../../types/error";
+import type { Error, MapsetWithMaps } from "@/types";
 import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
-const mapsetWithMaps = Prisma.validator<Prisma.MapsetArgs>()({
-  include: { Map: true },
-});
-
-type MapsetWithMaps = Prisma.MapsetGetPayload<typeof mapsetWithMaps>;
 
 export default async function handler(
   req: NextApiRequest,

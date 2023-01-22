@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -57,4 +58,6 @@ model Mapset {
   ranking_queue_vote_count   Int?
   mapset_ranking_queue_id    Int?
   Map                        Map[]
+
+  @@fulltext([title])
 }
