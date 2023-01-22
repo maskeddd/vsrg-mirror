@@ -93,9 +93,11 @@ export default function Browse() {
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {mapsets.map((mapset: MapsetWithMaps) => (
-          <MapsetCard key={mapset.id} mapset={mapset} />
-        ))}
+        {!isEmpty
+          ? mapsets.map((mapset: MapsetWithMaps) => (
+              <MapsetCard key={mapset.id} mapset={mapset} />
+            ))
+          : ""}
       </Grid>
       <Box
         ref={ref}
