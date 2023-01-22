@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type Error from "../../../types/error";
+import type { Error } from "@/types";
 import { Map, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 

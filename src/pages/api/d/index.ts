@@ -1,5 +1,5 @@
 import type { NextApiResponse, NextApiRequest } from "next";
-import type Error from "../../../types/error";
+import type { Error } from "@/types";
 
 export default function handler(
   _: NextApiRequest,

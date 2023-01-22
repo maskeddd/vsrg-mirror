@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type Error from "../../../types/error";
+import type { Error } from "@/types";
 import { getSignedUrl } from "@aws-sdk/cloudfront-signer";
 
 const domain = process.env.CLOUDFRONT_URL || "None";
