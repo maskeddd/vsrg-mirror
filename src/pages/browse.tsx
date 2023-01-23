@@ -8,6 +8,7 @@ import { MapsetWithMaps } from "@/types";
 
 import MapsetCard from "@/components/MapsetCard";
 import SearchBar from "@/components/SearchBar";
+import AudioPlayer from "@/components/AudioPlayer";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -18,6 +19,7 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { useMediaQuery } from "@mui/material";
 
 const PAGE_SIZE = 18;
 
@@ -36,6 +38,10 @@ const getKey = (
 export default function Browse() {
   const [query, setQuery] = useState("");
   const [actualQuery, setActualQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [previewMapset, setPreviewMapset] = useState<MapsetWithMaps>(
+    {} as MapsetWithMaps
+  );
 
   const [intersecting, ref] = useIntersection<HTMLDivElement>();
   const { data, error, size, setSize, isValidating } = useSWRInfinite<
@@ -57,8 +63,23 @@ export default function Browse() {
     }
   }, [intersecting, isReachingEnd, isRefreshing, setSize]);
 
+  function previewHandler(mapset: MapsetWithMaps) {
+    setOpen(true);
+    setPreviewMapset(mapset);
+  }
+
   return (
     <Box sx={{ padding: theme.spacing(4) }}>
+      <AudioPlayer
+        open={open}
+        mapset={previewMapset}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: useMediaQuery(theme.breakpoints.up("xs"))
+            ? "right"
+            : "center",
+        }}
+      />
       <Paper
         sx={{
           marginBottom: theme.spacing(2),
@@ -95,7 +116,11 @@ export default function Browse() {
       >
         {!isEmpty
           ? mapsets.map((mapset: MapsetWithMaps) => (
-              <MapsetCard key={mapset.id} mapset={mapset} />
+              <MapsetCard
+                key={mapset.id}
+                previewHandler={previewHandler}
+                mapset={mapset}
+              />
             ))
           : ""}
       </Grid>

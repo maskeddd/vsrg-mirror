@@ -13,19 +13,27 @@ import Tooltip from "@mui/material/Tooltip";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActionArea from "@mui/material/CardActionArea";
-import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
 import Fab from "@mui/material/Fab";
 
 import DownloadIcon from "@mui/icons-material/Download";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-const MapsetCard = ({ mapset }: { mapset: MapsetWithMaps }) => {
+import React from "react";
+
+const MapsetCard = ({
+  mapset,
+  previewHandler,
+}: {
+  mapset: MapsetWithMaps;
+  previewHandler: (mapset: MapsetWithMaps) => void;
+}) => {
   return (
     <Grid item xs={4} sm={4} md={4} key={mapset.id}>
       <Card sx={{ position: "relative" }}>
         <ModePill maps={mapset.Map} />
-        <CardActionArea>
+        <CardActionArea onClick={() => previewHandler(mapset)}>
           <CardMedia>
             <div
               style={{
