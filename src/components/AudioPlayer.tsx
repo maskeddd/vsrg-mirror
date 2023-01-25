@@ -79,6 +79,7 @@ const AudioPlayer = (props: any) => {
     <Snackbar
       sx={{ padding: "none", width: { sm: 400 } }}
       onClose={() => setPlaying(false)}
+      ClickAwayListenerProps={{ onClickAway: () => null }}
       {...other}
     >
       <SnackbarContent
