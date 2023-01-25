@@ -2,12 +2,17 @@ import useSWRInfinite from "swr/infinite";
 import { useEffect, useState } from "react";
 import useIntersection from "@/hooks/useIntersection";
 import fetcher from "@/helpers/fetcher";
+import { useMediaQuery } from "@mui/material";
 
 import theme from "@/theme";
 import { MapsetWithMaps } from "@/types";
 
 import MapsetCard from "@/components/MapsetCard";
-import SearchBar from "@/components/SearchBar";
+import {
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "@/components/SearchBar";
 import AudioPlayer from "@/components/AudioPlayer";
 
 import Box from "@mui/material/Box";
@@ -16,10 +21,11 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { useMediaQuery } from "@mui/material";
+// import Checkbox from "@mui/material/Checkbox";
+// import FormGroup from "@mui/material/FormGroup";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+
+import SearchIcon from "@mui/icons-material/Search";
 
 const PAGE_SIZE = 18;
 
@@ -72,6 +78,7 @@ export default function Browse() {
     <Box sx={{ padding: theme.spacing(4) }}>
       <AudioPlayer
         open={open}
+        setOpen={setOpen}
         mapset={previewMapset}
         anchorOrigin={{
           vertical: "bottom",
@@ -86,10 +93,24 @@ export default function Browse() {
           padding: theme.spacing(2),
           display: "flex",
           flexDirection: "column",
-          gap: 2,
+          gap: 1,
         }}
       >
-        <SearchBar onChange={(e) => setQuery(e.target.value)} />
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ "aria-label": "search" }}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setActualQuery(e.currentTarget.value);
+              }
+            }}
+          />
+        </Search>
         <Box display="flex" flexDirection="column" gap={2}>
           {/* <Box display="flex" flexDirection="row">
             <FormGroup row>

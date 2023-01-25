@@ -1,6 +1,5 @@
 import { alpha, styled } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -32,21 +31,4 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
 }));
 
-interface SearchBarProps {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export default function SearchBar({ onChange }: SearchBarProps) {
-  return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder="Search…"
-        inputProps={{ "aria-label": "search" }}
-        onChange={onChange}
-      />
-    </Search>
-  );
-}
+export { Search, SearchIconWrapper, StyledInputBase };
