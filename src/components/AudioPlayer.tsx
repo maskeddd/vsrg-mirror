@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import SnackbarContent from "@mui/material/SnackbarContent";
-import Button from "@mui/material/Button";
+import { lighten } from "@mui/material";
 import theme from "@/theme";
 import Image from "next/image";
 import Card from "@mui/material/Card";
@@ -13,7 +13,7 @@ import Fab from "@mui/material/Fab";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import { MapsetWithMaps } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 function formatDuration(milliseconds: number) {
   let hours = 0,
@@ -30,7 +30,15 @@ function formatDuration(milliseconds: number) {
 }
 
 const AudioPlayer = (props: any) => {
-  const { mapset, ...other }: { mapset: MapsetWithMaps; other: any } = props;
+  const {
+    mapset,
+    setOpen,
+    ...other
+  }: {
+    mapset: MapsetWithMaps;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+    other: any;
+  } = props;
   const [playing, setPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
 
@@ -49,12 +57,6 @@ const AudioPlayer = (props: any) => {
   };
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.onplaying = () => setPlaying(true);
-    }
-  }, [audioRef]);
-
-  useEffect(() => {
     const interval = setInterval(() =>
       setProgress(
         ((audioRef.current?.currentTime || 0) /
@@ -65,15 +67,22 @@ const AudioPlayer = (props: any) => {
     return () => clearInterval(interval);
   });
 
+  // if paused, auto-close after 5 seconds.
+  useEffect(() => {
+    if (!playing) {
+      const timeoutId = setTimeout(() => setOpen(false), 5000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [playing, setOpen]);
+
   return (
     <Snackbar
-      sx={{ padding: "none", minWidth: { sm: 400 } }}
-      autoHideDuration={16000}
+      sx={{ padding: "none", width: { sm: 400 } }}
+      onClose={() => setPlaying(false)}
       {...other}
     >
       <SnackbarContent
         sx={{
-          backgroundColor: theme.palette.background.paper,
           color: theme.palette.text.primary,
           position: "relative",
           overflow: "hidden",
@@ -82,8 +91,10 @@ const AudioPlayer = (props: any) => {
           "& .MuiSnackbarContent-message": { padding: 0, width: "100%" },
         }}
         message={
-          <Card sx={{ padding: 0 }}>
+          <Card elevation={12} sx={{ padding: 0 }}>
             <audio
+              onPlaying={() => setPlaying(true)}
+              onEnded={() => setPlaying(false)}
               ref={audioRef}
               src={`https://cdn.quavergame.com/audio-previews/${mapset.id}.mp3`}
               autoPlay
@@ -123,7 +134,6 @@ const AudioPlayer = (props: any) => {
                   {formatDuration((audioRef.current?.currentTime || 0) * 1000)}
                 </Typography>
                 <Typography variant="overline" lineHeight={1}>
-                  {" "}
                   {formatDuration((audioRef.current?.duration || 10) * 1000)}
                 </Typography>
               </Box>
@@ -135,19 +145,28 @@ const AudioPlayer = (props: any) => {
                 onClick={() => {
                   setPlaying(!playing);
 
-                  if (audioRef.current?.paused || false) playAudio();
+                  if (!playing) playAudio();
                   else pauseAudio();
                 }}
               >
                 {playing ? <PauseIcon /> : <PlayArrowIcon />}
               </Fab>
-              <Box display="flex" flexDirection="column">
+              <Box
+                display="flex"
+                flexDirection="column"
+                sx={{ width: { sm: 300 } }}
+                flexWrap="nowrap"
+                textOverflow="ellipsis"
+                overflow="hidden"
+              >
                 <Typography
                   variant="h6"
                   component="div"
                   lineHeight={1}
                   textOverflow="ellipsis"
                   overflow="hidden"
+                  display="-webkit-box"
+                  sx={{ WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}
                 >
                   {mapset.title}
                 </Typography>
