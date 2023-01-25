@@ -165,7 +165,7 @@ const MapsetCard = ({
             }}
           >
             {mapset.tags
-              ?.split(",")
+              ?.split(/[, ]+/)
               // .slice(0, 3)
               .map((tag) => (
                 <Chip key={tag} label={tag} size="small" />
