@@ -14,8 +14,10 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardMedia from "@mui/material/CardMedia";
+import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import Fab from "@mui/material/Fab";
+import Chip from "@mui/material/Chip";
 
 import DownloadIcon from "@mui/icons-material/Download";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
@@ -146,6 +148,30 @@ const MapsetCard = ({
             </Tooltip>
           </Box>
         </CardContent>
+        <CardActions>
+          <Box
+            display="flex"
+            gap={0.5}
+            sx={{
+              overflowX: "scroll",
+              "::-webkit-scrollbar": {
+                width: 0,
+                height: 0,
+                backgroundColor: "transparent",
+              },
+              "::-webkit-scrollbar-thumb": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            {mapset.tags
+              ?.split(",")
+              // .slice(0, 3)
+              .map((tag) => (
+                <Chip key={tag} label={tag} size="small" />
+              ))}
+          </Box>
+        </CardActions>
       </Card>
     </Grid>
   );
