@@ -33,6 +33,7 @@ export default async function handler(
             { title: { contains: String(query) } },
             { artist: { contains: String(query) } },
             { creator_username: { contains: String(query) } },
+            { tags: { contains: String(query) } },
           ],
         },
         take: Number(amount),
