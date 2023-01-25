@@ -54,13 +54,16 @@ export default function Browse() {
     MapsetWithMaps[]
   >((...args) => getKey(...args, actualQuery), fetcher);
 
-  const mapsets = data ? data.flat() : [];
+  const mapsets = data
+    ? data.filter((i) => !i.hasOwnProperty("code")).flat()
+    : [];
   const isLoadingInitialData = !data && !error;
   const isLoadingMore =
     isLoadingInitialData ||
     (size > 0 && data && typeof data[size - 1] === "undefined");
   const isEmpty = (data?.[0]?.length ?? 0) === 0;
-  const isReachingEnd = isEmpty || (data?.[0]?.length ?? 0) < PAGE_SIZE;
+  const isReachingEnd =
+    isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
   const isRefreshing = isValidating && data && data.length === size;
 
   useEffect(() => {
@@ -103,7 +106,7 @@ export default function Browse() {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
-            onChange={(e) => setQuery(e.target.value)}
+            onBlur={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setActualQuery(e.currentTarget.value);
@@ -135,15 +138,13 @@ export default function Browse() {
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {!isEmpty
-          ? mapsets.map((mapset: MapsetWithMaps) => (
-              <MapsetCard
-                key={mapset.id}
-                previewHandler={previewHandler}
-                mapset={mapset}
-              />
-            ))
-          : ""}
+        {mapsets.map((mapset: MapsetWithMaps) => (
+          <MapsetCard
+            key={mapset.id}
+            previewHandler={previewHandler}
+            mapset={mapset}
+          />
+        ))}
       </Grid>
       <Box
         ref={ref}
